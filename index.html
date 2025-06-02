@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CRM Application</title>
+  <link rel="stylesheet" href="index.css">
+<script type="importmap">
+{
+  "imports": {
+    "react": "https://esm.sh/react@^19.1.0",
+    "react-dom/": "https://esm.sh/react-dom@^19.1.0/",
+    "react/": "https://esm.sh/react@^19.1.0/"
+  }
+}
+</script>
+</head>
+<body>
+  <div class="crm-app">
+    <nav class="sidebar" aria-label="Main navigation">
+      <div class="sidebar-header">
+        CRM Pro
+      </div>
+      <ul id="sidebar-nav-list">
+        <!-- Navigation items will be populated by script.js -->
+      </ul>
+    </nav>
+    <main class="content-area" aria-live="polite">
+      <!-- Tab Content Placeholders -->
+      <div id="dashboard-content" class="tab-content" style="display:none;">
+        <h1 id="tab-content-header-dashboard">Dashboard</h1>
+        <div id="dashboard-setup-message">
+            <!-- Message for configuring endpoints -->
+        </div>
+        <div class="dashboard-controls" style="display:none;">
+          <div class="form-group">
+            <label htmlFor="dashboard-api-selector">Select API Endpoint:</label>
+            <select id="dashboard-api-selector">
+              <option value="">-- Select an Endpoint --</option>
+            </select>
+          </div>
+          <button id="load-dashboard-data-btn" class="btn btn-primary" disabled>Load Dashboard Data</button>
+        </div>
+
+        <div id="dashboard-loading-indicator" class="loading-indicator" style="display:none;">Loading dashboard data...</div>
+        <div id="dashboard-error-message" class="error-message" style="display:none;"></div>
+
+        <div id="dashboard-data-area" class="dashboard-data-area" style="display:none;">
+          <section class="dashboard-section scorecards-section" aria-labelledby="scorecards-title">
+            <h2 id="scorecards-title" class="section-title">Key Metrics</h2>
+            <div class="scorecards-grid">
+              <div class="scorecard">
+                <h3 class="scorecard-title">Metric 1</h3>
+                <p id="scorecard-metric1" class="scorecard-value">N/A</p>
+              </div>
+              <div class="scorecard">
+                <h3 class="scorecard-title">Metric 2</h3>
+                <p id="scorecard-metric2" class="scorecard-value">N/A</p>
+              </div>
+              <div class="scorecard">
+                <h3 class="scorecard-title">Metric 3</h3>
+                <p id="scorecard-metric3" class="scorecard-value">N/A</p>
+              </div>
+            </div>
+          </section>
+
+          <section class="dashboard-section" aria-labelledby="visualizations-title">
+            <h2 id="visualizations-title" class="section-title">Visualizations</h2>
+            <div class="charts-grid">
+              <div class="chart-placeholder">Chart: Data Overview (Placeholder)</div>
+              <div class="chart-placeholder">Chart: Trends (Placeholder)</div>
+            </div>
+          </section>
+
+          <section class="dashboard-section" aria-labelledby="data-table-title">
+            <h2 id="data-table-title" class="section-title">Data Table</h2>
+            <div id="dashboard-table-container" class="table-responsive">
+              <!-- Table will be rendered here or a message -->
+            </div>
+             <pre id="dashboard-raw-json-data" class="api-response-data" style="display:none;"></pre>
+          </section>
+        </div>
+      </div>
+
+      <div id="page-performance-content" class="tab-content" style="display:none;">
+        <h1 id="tab-content-header-page-performance">Page Performance</h1>
+        <p>Content for Page Performance will be displayed here.</p>
+      </div>
+      <div id="revenue-content" class="tab-content" style="display:none;">
+        <h1 id="tab-content-header-revenue">Revenue</h1>
+        <p>Content for Revenue will be displayed here.</p>
+      </div>
+      <div id="forecast-trends-content" class="tab-content" style="display:none;">
+        <h1 id="tab-content-header-forecast-trends">Forecast/Trends</h1>
+        <p>Content for Forecast/Trends will be displayed here.</p>
+      </div>
+      <div id="competitors-content" class="tab-content" style="display:none;">
+        <h1 id="tab-content-header-competitors">Competitors</h1>
+        <p>Content for Competitors will be displayed here.</p>
+      </div>
+      <div id="customers-content" class="tab-content" style="display:none;">
+        <h1 id="tab-content-header-customers">Customers</h1>
+        <p>Content for Customers will be displayed here.</p>
+      </div>
+      <div id="partners-content" class="tab-content" style="display:none;">
+        <h1 id="tab-content-header-partners">Partners</h1>
+        <p>Content for Partners will be displayed here.</p>
+      </div>
+
+      <div id="settings-content" class="tab-content settings-content" style="display:none;">
+        <div class="settings-header">
+          <h2 id="tab-content-header-settings">Data Layer Integrations</h2>
+          <button id="add-new-endpoint-btn" class="btn btn-primary">Add New Endpoint</button>
+        </div>
+        <p id="no-endpoints-message">No API endpoints configured yet. Click "Add New Endpoint" to get started.</p>
+        <table class="endpoints-table" aria-labelledby="tab-content-header-settings" style="display:none;">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>URL</th>
+              <th>Type</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="api-endpoints-table-body">
+            <!-- Rows will be populated by script.js -->
+          </tbody>
+        </table>
+      </div>
+      <div id="fallback-content" class="tab-content" style="display:none;">
+         <p>Select a tab.</p>
+      </div>
+    </main>
+  </div>
+
+  <!-- Add/Edit Endpoint Modal -->
+  <div id="endpoint-modal" class="modal-overlay" style="display:none;" role="dialog" aria-modal="true" aria-labelledby="endpoint-modal-title">
+    <div class="modal-content">
+      <h3 id="endpoint-modal-title">Add New Endpoint</h3>
+      <form id="endpoint-form" class="endpoint-form">
+        <input type="hidden" id="endpoint-id" name="id">
+        <div class="form-group">
+          <label for="endpoint-name">Name:</label>
+          <input type="text" id="endpoint-name" name="name" required />
+        </div>
+        <div class="form-group">
+          <label for="endpoint-url">URL:</label>
+          <input type="url" id="endpoint-url" name="url" required />
+        </div>
+        <div class="form-group">
+          <label for="endpoint-type">Type:</label>
+          <select id="endpoint-type" name="type">
+            <option value="REST">REST</option>
+            <option value="GraphQL">GraphQL</option>
+            <option value="Webhook Relay">Webhook Relay</option>
+          </select>
+        </div>
+        <div class="form-group form-group-checkbox">
+          <input type="checkbox" id="endpoint-isEnabled" name="isEnabled" />
+          <label for="endpoint-isEnabled">Enabled</label>
+        </div>
+        <div class="form-actions">
+          <button type="submit" class="btn btn-primary">Save</button>
+          <button type="button" id="cancel-endpoint-modal-btn" class="btn btn-secondary">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- API Response Modal -->
+  <div id="response-modal" class="modal-overlay" style="display:none;" role="dialog" aria-modal="true" aria-labelledby="response-modal-title">
+    <div class="modal-content response-modal-content">
+      <h3 id="response-modal-title">API Response</h3>
+      <div id="response-loading-indicator" class="loading-indicator" style="display:none;">Loading...</div>
+      <pre id="api-response-data-content" class="api-response-data"></pre>
+      <div class="form-actions">
+        <button type="button" id="close-response-modal-btn" class="btn btn-secondary">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <script defer src="script.js"></script>
+</body>
+</html>
