@@ -226,6 +226,27 @@ document.addEventListener('DOMContentLoaded', () => {
     endpointModal.style.display = 'flex';
     endpointNameInput.focus();
   }
+function doGet(e) {
+  var responseData = {
+    status: "success",
+    message: "CORS headers are set!"
+  };
+  return ContentService
+    .createTextOutput(JSON.stringify(responseData))
+    .setMimeType(ContentService.MimeType.JSON)
+    .setHeader("Access-Control-Allow-Origin", "*")
+    .setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
+    .setHeader("Access-Control-Allow-Headers", "Content-Type");
+}
+
+// Optionally handle preflight requests
+function doOptions(e) {
+  return ContentService.createTextOutput('')
+    .setMimeType(ContentService.MimeType.TEXT)
+    .setHeader("Access-Control-Allow-Origin", "*")
+    .setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
+    .setHeader("Access-Control-Allow-Headers", "Content-Type");
+}
 
   function closeModal(modalElement) {
     if (modalElement) {
