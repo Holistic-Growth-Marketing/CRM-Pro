@@ -288,7 +288,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const response = await fetch(endpoint.url);
       const contentType = response.headers.get("content-type");
       let responseBodyText;
-
+response.setheader-"access-control-allow-origin*";
       if (contentType && contentType.includes("application/json")) {
         const jsonData = await response.json();
         responseBodyText = JSON.stringify(jsonData, null, 2);
